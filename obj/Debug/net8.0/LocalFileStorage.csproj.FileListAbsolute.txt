@@ -1,0 +1,13 @@
+/Users/kaanyarayan/Projects/LocalFileStorage/bin/Debug/net8.0/LocalFileStorage.deps.json
+/Users/kaanyarayan/Projects/LocalFileStorage/bin/Debug/net8.0/LocalFileStorage.dll
+/Users/kaanyarayan/Projects/LocalFileStorage/bin/Debug/net8.0/LocalFileStorage.pdb
+/Users/kaanyarayan/Projects/LocalFileStorage/bin/Debug/net8.0/LocalFileStorage.xml
+/Users/kaanyarayan/Projects/LocalFileStorage/obj/Debug/net8.0/LocalFileStorage.GeneratedMSBuildEditorConfig.editorconfig
+/Users/kaanyarayan/Projects/LocalFileStorage/obj/Debug/net8.0/LocalFileStorage.AssemblyInfoInputs.cache
+/Users/kaanyarayan/Projects/LocalFileStorage/obj/Debug/net8.0/LocalFileStorage.AssemblyInfo.cs
+/Users/kaanyarayan/Projects/LocalFileStorage/obj/Debug/net8.0/LocalFileStorage.csproj.CoreCompileInputs.cache
+/Users/kaanyarayan/Projects/LocalFileStorage/obj/Debug/net8.0/LocalFileStorage.dll
+/Users/kaanyarayan/Projects/LocalFileStorage/obj/Debug/net8.0/refint/LocalFileStorage.dll
+/Users/kaanyarayan/Projects/LocalFileStorage/obj/Debug/net8.0/LocalFileStorage.xml
+/Users/kaanyarayan/Projects/LocalFileStorage/obj/Debug/net8.0/LocalFileStorage.pdb
+/Users/kaanyarayan/Projects/LocalFileStorage/obj/Debug/net8.0/ref/LocalFileStorage.dll
