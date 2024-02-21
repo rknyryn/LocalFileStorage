@@ -108,4 +108,4 @@ public class FileStorageController : ControllerBase
 
 ## Feedback
 
-Local File Storage is released as open source under the [MIT license](./LICENSE). Bug reports and contributions are welcome at the [GitHub repository](https://github.com/rknyryn/LocalFileStorage.git).
+Local File Storage is released as open source under the [MIT license](https://github.com/rknyryn/LocalFileStorage/blob/main/LICENSE). Bug reports and contributions are welcome at the [GitHub repository](https://github.com/rknyryn/LocalFileStorage.git).

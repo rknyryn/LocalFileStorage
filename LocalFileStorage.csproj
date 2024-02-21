@@ -11,6 +11,9 @@
     <Authors>Kaan Yarayan</Authors>
     <Description>Local File Storage</Description>
     <PackageTags>Local File Storage, File Storage, File, Storage, Local, Local File, Local Storage</PackageTags>
+    <Description>A simple NuGet package for file storage operations.</Description>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/rknyryn/LocalFileStorage</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
