@@ -7,7 +7,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
     <PackageId>rknyryn.LocalFileStorage</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>Kaan Yarayan</Authors>
     <Description>Local File Storage</Description>
     <PackageTags>Local File Storage, File Storage, File, Storage, Local, Local File, Local Storage</PackageTags>
