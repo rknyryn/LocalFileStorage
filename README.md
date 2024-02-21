@@ -44,7 +44,7 @@ app.MapPost("/uploadFile", (IFormFile file, [FromServices] IFileStorage fileStor
 
 app.MapGet("/downloadFile", (string filePath, [FromServices] IFileStorage fileStorage) =>
 {
-    var stream = fileStorage.DownloadFile(filePath);
+    var stream = fileStorage.GetFile(filePath);
 
     return new FileStreamResult(stream, "application/octet-stream")
     {
