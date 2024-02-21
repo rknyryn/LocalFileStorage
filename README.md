@@ -87,7 +87,7 @@ public class FileStorageController : ControllerBase
     [HttpGet("downloadFile")]
     public FileStreamResult DownloadFile(string filePath)
     {
-        var stream = _fileStorage.DownloadFile(filePath);
+        var stream = _fileStorage.GetFile(filePath);
 
         return new FileStreamResult(stream, "application/octet-stream")
         {
