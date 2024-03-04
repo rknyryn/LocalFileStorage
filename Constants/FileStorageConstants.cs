@@ -2,7 +2,8 @@ namespace LocalFileStorage.Constants;
 
 public static class FileStorageConstants
 {
-    public static readonly string[] VALID_FILE_EXTENSIONS = [
+    public static readonly string[] VALID_FILE_EXTENSIONS = new string[]{
+
         ".pdf",
         ".xls",
         ".xlsx",
@@ -18,5 +19,5 @@ public static class FileStorageConstants
         ".wav",
         ".wma",
         ".m4a"
-    ];
+    };
 }
