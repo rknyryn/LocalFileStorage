@@ -1,6 +1,6 @@
 # Local File Storage
 
-Local File Storage is a NuGet package developed with [.NET 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0). This package basically performs file writing and deletion operations on the local disk. Developers can use this package for file operations in their small or medium-sized projects.
+Local File Storage is a NuGet package developed with [.NET](https://dotnet.microsoft.com/en-us/download). This package basically performs file writing and deletion operations on the local disk. Developers can use this package for file operations in their small or medium-sized projects.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
@@ -29,17 +29,38 @@ You can get IFileStorage instance via dependency injection, you need add to serv
 builder.Services.AddFileStorageServices();
 ```
 
+or you can configure
+
+```csharp
+builder.Services.AddFileStorageServices(options =>
+{
+    options.BaseFolderPath = Path.Combine("uploaded", "files");
+    options.GlobalFileExtensionFilter = [".pdf", ".png"];
+});
+```
+
 ## Usage
+
+### Example Response
+
+```json
+{
+  "fileName": "combinepdf.pdf",
+  "fileNameGenerated": "20240311_e67a0_combinepdf-912.pdf",
+  "filePath": "/Users/kaanyarayan/Projects/CookieAuthenticationDemo/uploaded/files/documents/20240311_e67a0_combinepdf-912.pdf",
+  "contentType": "application/pdf"
+}
+```
 
 ### Minimal API Example
 
 ```csharp
 app.MapPost("/uploadFile", (IFormFile file, [FromServices] IFileStorage fileStorage) =>
 {
-    var filePath = fileStorage.UploadFile(file, "uploads");
-    // var filePath = fileStorage.UploadFile(file, "uploads", [".jpg", ".png"]);
+    FileUploadResult fileUploadResult = fileStorage.UploadFile(file, "documents");
+    // FileUploadResult fileUploadResult = fileStorage.UploadFile(file, "documents", [".jpg", ".png"]);
 
-    return filePath;
+    return fileUploadResult;
 });
 
 app.MapGet("/downloadFile", (string filePath, [FromServices] IFileStorage fileStorage) =>
@@ -76,12 +97,12 @@ public class FileStorageController : ControllerBase
     }
 
     [HttpPost("uploadFile")]
-    public string UploadFile(IFormFile file)
+    public FileUploadResult UploadFile(IFormFile file)
     {
-        var filePath = _fileStorage.UploadFile(file, "uploads");
-        // var filePath = fileStorage.UploadFile(file, "uploads", [".jpg", ".png"]);
+        FileUploadResult fileUploadResult = _fileStorage.UploadFile(file, "documents");
+        // FileUploadResult fileUploadResult = fileStorage.UploadFile(file, "documents", [".jpg", ".png"]);
 
-        return filePath;
+        return fileUploadResult;
     }
 
     [HttpGet("downloadFile")]

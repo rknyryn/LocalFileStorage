@@ -1,3 +1,4 @@
+using LocalFileStorage.Models;
 using Microsoft.AspNetCore.Http;
 
 namespace LocalFileStorage.Interfaces;
@@ -9,9 +10,15 @@ public interface IFileStorage
     /// </summary>
     /// <param name="file">The file to be uploaded.</param>
     /// <param name="path">The path to upload the file to.</param>
+    FileUploadResult UploadFile(IFormFile file, string path);
+
+    /// <summary>
+    /// This method is used to upload a file to the file storage.
+    /// </summary>
+    /// <param name="file">The file to be uploaded.</param>
+    /// <param name="path">The path to upload the file to.</param>
     /// <param name="extensionFilter">The file extensions that are allowed to be uploaded.</param>
-    /// <returns>The URL of the uploaded file.</returns>
-    string UploadFile(IFormFile file, string path, string[]? extensionFilter = null);
+    FileUploadResult UploadFile(IFormFile file, string path, string[] extensionFilter);
 
     /// <summary>
     /// This method is used to delete a file from the file storage.

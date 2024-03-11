@@ -1,4 +1,3 @@
-using LocalFileStorage.Constants;
 using LocalFileStorage.Exceptions;
 using LocalFileStorage.Extensions;
 
@@ -11,21 +10,11 @@ public static class FileStorageHelpers
     /// </summary>
     /// <param name="extensionFilter">Valid file extensions. If it is null, it will use the default file extensions.</param>
     /// <param name="fileExtension">File extension to check.</param>
-    public static void CheckFileExtension(string fileExtension, string[]? extensionFilter = null)
+    public static void CheckFileExtension(string fileExtension, string[] extensionFilter)
     {
-        if (extensionFilter is null)
+        if (extensionFilter.Contains(fileExtension) is false)
         {
-            if (FileStorageConstants.VALID_FILE_EXTENSIONS.Contains(fileExtension) is false)
-            {
-                throw new InvalidFileExtensionException();
-            }
-        }
-        else
-        {
-            if (extensionFilter.Contains(fileExtension) is false)
-            {
-                throw new InvalidFileExtensionException();
-            }
+            throw new InvalidFileExtensionException();
         }
     }
 
