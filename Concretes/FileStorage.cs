@@ -20,7 +20,15 @@ public class FileStorage : IFileStorage
         ArgumentNullException.ThrowIfNull(file, nameof(file));
         ArgumentNullException.ThrowIfNull(path, nameof(path));
 
-        string combinedPath = string.IsNullOrEmpty(_fileStorageOptions.BaseFolderPath) ? path : Path.Combine(_fileStorageOptions.BaseFolderPath, path);
+        if (_fileStorageOptions.GlobalFileExtensionFilter is not null)
+        {
+            FileStorageHelpers.CheckFileExtension(Path.GetExtension(file.FileName).ToLower(),
+                _fileStorageOptions.GlobalFileExtensionFilter);
+        }
+
+        string combinedPath = string.IsNullOrEmpty(_fileStorageOptions.BaseFolderPath)
+            ? path
+            : Path.Combine(_fileStorageOptions.BaseFolderPath, path);
         string uploadPath = Path.Combine(Environment.CurrentDirectory, combinedPath);
 
         if (!File.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
@@ -34,9 +42,9 @@ public class FileStorage : IFileStorage
         }
 
         return new FileUploadResult(fileName: file.FileName,
-                                    filePath: uploadFilePath,
-                                    contentType: file.ContentType,
-                                    fileNameGenerated: fileNameGenerated);
+            filePath: uploadFilePath,
+            contentType: file.ContentType,
+            fileNameGenerated: fileNameGenerated);
     }
 
     public FileUploadResult UploadFile(IFormFile file, string path, string[] extensionFilter)
@@ -49,6 +57,7 @@ public class FileStorage : IFileStorage
         {
             extensionFilter = extensionFilter.Union(_fileStorageOptions.GlobalFileExtensionFilter).ToArray();
         }
+
         FileStorageHelpers.CheckFileExtension(fileExtension, extensionFilter);
 
         return UploadFile(file, path);
