@@ -75,7 +75,8 @@ public class FileStorageController : ControllerBase
     public FileUploadResult UploadFile(IFormFile uploadedFile)
     {
         FileUploadResult fileUploadResult = _fileStorage.UploadFile(file: uploadedFile, directoryPath: "documents");
-        // FileUploadResult fileUploadResult = fileStorage.UploadFile(file: uploadedFile, directoryPath: "documents", extensionFilter: [".jpg", ".png"]);
+        // FileUploadResult fileUploadResult = fileStorage.UploadFile(file: uploadedFile, directoryPath: "documents", extensionFilter: [".jpg"]);
+        // FileUploadResult fileUploadResult = fileStorage.UploadFile(file: uploadedFile, directoryPath: "documents", extensionFilter: [".jpg"], includeGlobalFileExtensionFilter: false);
 
         return fileUploadResult;
     }
