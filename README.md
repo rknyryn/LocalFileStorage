@@ -39,6 +39,10 @@ builder.Services.AddFileStorageServices(options =>
 });
 ```
 
+**BaseFolderPath** specifies the root directory where uploaded files will be stored within the file system. All uploaded files will be organized relative to this base folder.
+
+**GlobalFileExtensionFilter** is a setting that defines a global filter for file extensions. It determines which file types are allowed to be uploaded and stored within the system. Only files with extensions specified in this filter will be accepted.
+
 ## Usage
 
 ### Example Response
@@ -47,39 +51,10 @@ builder.Services.AddFileStorageServices(options =>
 {
   "fileName": "combinepdf.pdf",
   "fileNameGenerated": "20240311_e67a0_combinepdf-912.pdf",
-  "filePath": "/Users/kaanyarayan/Projects/CookieAuthenticationDemo/uploaded/files/documents/20240311_e67a0_combinepdf-912.pdf",
+  "filePath": "uploaded/files/documents/20240311_e67a0_combinepdf-912.pdf",
+  "fullPath": "/Users/kaanyarayan/Projects/CookieAuthenticationDemo/uploaded/files/documents/20240311_e67a0_combinepdf-912.pdf",
   "contentType": "application/pdf"
 }
-```
-
-### Minimal API Example
-
-```csharp
-app.MapPost("/uploadFile", (IFormFile file, [FromServices] IFileStorage fileStorage) =>
-{
-    FileUploadResult fileUploadResult = fileStorage.UploadFile(file, "documents");
-    // FileUploadResult fileUploadResult = fileStorage.UploadFile(file, "documents", [".jpg", ".png"]);
-
-    return fileUploadResult;
-});
-
-app.MapGet("/downloadFile", (string filePath, [FromServices] IFileStorage fileStorage) =>
-{
-    var stream = fileStorage.GetFile(filePath);
-
-    return new FileStreamResult(stream, "application/octet-stream")
-    {
-        FileDownloadName = Path.GetFileName(filePath),
-        EnableRangeProcessing = true
-    };
-});
-
-app.MapPost("/deleteFile", (string filePath, [FromServices] IFileStorage fileStorage) =>
-{
-    fileStorage.DeleteFile(filePath);
-
-    return filePath;
-});
 ```
 
 ### Controller-based API Example
@@ -97,10 +72,10 @@ public class FileStorageController : ControllerBase
     }
 
     [HttpPost("uploadFile")]
-    public FileUploadResult UploadFile(IFormFile file)
+    public FileUploadResult UploadFile(IFormFile uploadedFile)
     {
-        FileUploadResult fileUploadResult = _fileStorage.UploadFile(file, "documents");
-        // FileUploadResult fileUploadResult = fileStorage.UploadFile(file, "documents", [".jpg", ".png"]);
+        FileUploadResult fileUploadResult = _fileStorage.UploadFile(file: uploadedFile, directoryPath: "documents");
+        // FileUploadResult fileUploadResult = fileStorage.UploadFile(file: uploadedFile, directoryPath: "documents", extensionFilter: [".jpg", ".png"]);
 
         return fileUploadResult;
     }
@@ -108,7 +83,7 @@ public class FileStorageController : ControllerBase
     [HttpGet("downloadFile")]
     public FileStreamResult DownloadFile(string filePath)
     {
-        var stream = _fileStorage.GetFile(filePath);
+        var stream = _fileStorage.GetFile(filePath: filePath);
 
         return new FileStreamResult(stream, "application/octet-stream")
         {
@@ -120,7 +95,7 @@ public class FileStorageController : ControllerBase
     [HttpPost("deleteFile")]
     public string DeleteFile(string filePath)
     {
-        _fileStorage.DeleteFile(filePath);
+        _fileStorage.DeleteFile(filePath: filePath);
 
         return filePath;
     }

@@ -9,16 +9,16 @@ public interface IFileStorage
     /// This method is used to upload a file to the file storage.
     /// </summary>
     /// <param name="file">The file to be uploaded.</param>
-    /// <param name="path">The path to upload the file to.</param>
-    FileUploadResult UploadFile(IFormFile file, string path);
+    /// <param name="directoryPath">The path to upload the file to.</param>
+    FileUploadResult UploadFile(IFormFile file, string directoryPath);
 
     /// <summary>
     /// This method is used to upload a file to the file storage.
     /// </summary>
     /// <param name="file">The file to be uploaded.</param>
-    /// <param name="path">The path to upload the file to.</param>
+    /// <param name="directoryPath">The path to upload the file to.</param>
     /// <param name="extensionFilter">The file extensions that are allowed to be uploaded.</param>
-    FileUploadResult UploadFile(IFormFile file, string path, string[] extensionFilter);
+    FileUploadResult UploadFile(IFormFile file, string directoryPath, string[] extensionFilter);
 
     /// <summary>
     /// This method is used to delete a file from the file storage.

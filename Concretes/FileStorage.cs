@@ -15,10 +15,10 @@ public class FileStorage : IFileStorage
         _fileStorageOptions = fileStorageOptions;
     }
 
-    public FileUploadResult UploadFile(IFormFile file, string path)
+    public FileUploadResult UploadFile(IFormFile file, string directoryPath)
     {
         ArgumentNullException.ThrowIfNull(file, nameof(file));
-        ArgumentNullException.ThrowIfNull(path, nameof(path));
+        ArgumentNullException.ThrowIfNull(directoryPath, nameof(directoryPath));
 
         if (_fileStorageOptions.GlobalFileExtensionFilter is not null)
         {
@@ -26,31 +26,34 @@ public class FileStorage : IFileStorage
                 _fileStorageOptions.GlobalFileExtensionFilter);
         }
 
-        string combinedPath = string.IsNullOrEmpty(_fileStorageOptions.BaseFolderPath)
-            ? path
-            : Path.Combine(_fileStorageOptions.BaseFolderPath, path);
-        string uploadPath = Path.Combine(Environment.CurrentDirectory, combinedPath);
+        var combinedDirectoryPath = string.IsNullOrEmpty(_fileStorageOptions.BaseFolderPath)
+            ? directoryPath
+            : Path.Combine(_fileStorageOptions.BaseFolderPath, directoryPath);
+        var uploadDirectoryPath = Path.Combine(Environment.CurrentDirectory, combinedDirectoryPath);
 
-        if (!File.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
+        if (!File.Exists(uploadDirectoryPath)) Directory.CreateDirectory(uploadDirectoryPath);
 
-        string fileNameGenerated = FileStorageHelpers.GenerateFileName(file.FileName);
-        string uploadFilePath = Path.Combine(uploadPath, fileNameGenerated);
+        var fileNameGenerated = FileStorageHelpers.GenerateFileName(file.FileName);
+        var fullPath = Path.Combine(uploadDirectoryPath, fileNameGenerated);
 
-        using (var stream = new FileStream(uploadFilePath, FileMode.Create))
+        using (var stream = new FileStream(fullPath, FileMode.Create))
         {
             file.CopyTo(stream);
         }
 
+        var filePath = fullPath.Replace(Environment.CurrentDirectory, "").Remove(0, 1);
+
         return new FileUploadResult(fileName: file.FileName,
-            filePath: uploadFilePath,
+            filePath: filePath,
+            fullPath: fullPath,
             contentType: file.ContentType,
             fileNameGenerated: fileNameGenerated);
     }
 
-    public FileUploadResult UploadFile(IFormFile file, string path, string[] extensionFilter)
+    public FileUploadResult UploadFile(IFormFile file, string directoryPath, string[] extensionFilter)
     {
         ArgumentNullException.ThrowIfNull(file, nameof(file));
-        ArgumentNullException.ThrowIfNull(path, nameof(path));
+        ArgumentNullException.ThrowIfNull(directoryPath, nameof(directoryPath));
 
         string fileExtension = Path.GetExtension(file.FileName).ToLower();
         if (_fileStorageOptions.GlobalFileExtensionFilter is not null)
@@ -60,7 +63,7 @@ public class FileStorage : IFileStorage
 
         FileStorageHelpers.CheckFileExtension(fileExtension, extensionFilter);
 
-        return UploadFile(file, path);
+        return UploadFile(file, directoryPath);
     }
 
     public void DeleteFile(string filePath)
