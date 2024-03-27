@@ -26,6 +26,44 @@ public class FileStorage : IFileStorage
                 _fileStorageOptions.GlobalFileExtensionFilter);
         }
 
+        return Upload(file, directoryPath);
+    }
+
+    public FileUploadResult UploadFile(IFormFile file, string directoryPath, string[] extensionFilter,
+        bool includeGlobalFileExtensionFilter = true)
+    {
+        ArgumentNullException.ThrowIfNull(file, nameof(file));
+        ArgumentNullException.ThrowIfNull(directoryPath, nameof(directoryPath));
+
+        var fileExtension = Path.GetExtension(file.FileName).ToLower();
+        if (_fileStorageOptions.GlobalFileExtensionFilter is not null && includeGlobalFileExtensionFilter)
+        {
+            extensionFilter = extensionFilter.Union(_fileStorageOptions.GlobalFileExtensionFilter).ToArray();
+        }
+
+        FileStorageHelpers.CheckFileExtension(fileExtension, extensionFilter);
+
+        return Upload(file, directoryPath);
+    }
+
+    public void DeleteFile(string filePath)
+    {
+        ArgumentNullException.ThrowIfNull(filePath, nameof(filePath));
+        if (File.Exists(filePath) is false) throw new FileNotFoundException();
+
+        File.Delete(filePath);
+    }
+
+    public Stream GetFile(string filePath)
+    {
+        ArgumentNullException.ThrowIfNull(filePath, nameof(filePath));
+        if (File.Exists(filePath) is false) throw new FileNotFoundException();
+
+        return new FileStream(filePath, FileMode.Open);
+    }
+    
+    private FileUploadResult Upload(IFormFile file, string directoryPath)
+    {
         var combinedDirectoryPath = string.IsNullOrEmpty(_fileStorageOptions.BaseFolderPath)
             ? directoryPath
             : Path.Combine(_fileStorageOptions.BaseFolderPath, directoryPath);
@@ -48,37 +86,5 @@ public class FileStorage : IFileStorage
             fullPath: fullPath,
             contentType: file.ContentType,
             fileNameGenerated: fileNameGenerated);
-    }
-
-    public FileUploadResult UploadFile(IFormFile file, string directoryPath, string[] extensionFilter)
-    {
-        ArgumentNullException.ThrowIfNull(file, nameof(file));
-        ArgumentNullException.ThrowIfNull(directoryPath, nameof(directoryPath));
-
-        string fileExtension = Path.GetExtension(file.FileName).ToLower();
-        if (_fileStorageOptions.GlobalFileExtensionFilter is not null)
-        {
-            extensionFilter = extensionFilter.Union(_fileStorageOptions.GlobalFileExtensionFilter).ToArray();
-        }
-
-        FileStorageHelpers.CheckFileExtension(fileExtension, extensionFilter);
-
-        return UploadFile(file, directoryPath);
-    }
-
-    public void DeleteFile(string filePath)
-    {
-        ArgumentNullException.ThrowIfNull(filePath, nameof(filePath));
-        if (File.Exists(filePath) is false) throw new FileNotFoundException();
-
-        File.Delete(filePath);
-    }
-
-    public Stream GetFile(string filePath)
-    {
-        ArgumentNullException.ThrowIfNull(filePath, nameof(filePath));
-        if (File.Exists(filePath) is false) throw new FileNotFoundException();
-
-        return new FileStream(filePath, FileMode.Open);
     }
 }

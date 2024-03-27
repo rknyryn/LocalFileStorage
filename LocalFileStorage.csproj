@@ -7,12 +7,10 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
     <PackageId>rknyryn.LocalFileStorage</PackageId>
-    <Version>3.0.0</Version>
+    <Version>3.1.0</Version>
     <PackageReleaseNotes>
-      - Transitioned services from 'AddScoped' to 'AddSingleton' for enhanced performance.
-      - Renamed the 'path' parameter to 'directoryPath' for more clarity.
-      - Implemented 'Path.IsRooted' check for the base folder path to ensure valid directory paths.
-      - Enhanced the package functionality to return both relative and full file paths.
+      - File extension filter bug fixed.
+      - Include global extension filter parameter added.
     </PackageReleaseNotes>
     <Authors>Kaan Yarayan</Authors>
     <Description>Local File Storage</Description>
