@@ -61,15 +61,50 @@ public class FileStorage : IFileStorage
 
         return new FileStream(filePath, FileMode.Open);
     }
-    
+
+    public void CopyFile(string srcFilePath, string destDirectoryPath)
+    {
+        ArgumentNullException.ThrowIfNull(srcFilePath, nameof(srcFilePath));
+        ArgumentNullException.ThrowIfNull(destDirectoryPath, nameof(destDirectoryPath));
+
+        if (File.Exists(srcFilePath) is false)
+        {
+            throw new FileNotFoundException();
+        }
+
+        if (Path.HasExtension(destDirectoryPath))
+        {
+            throw new Exception("Destination directory path should not contain file extension.");
+        }
+
+        var destDirectoryFullPath = Path.Combine(Environment.CurrentDirectory, destDirectoryPath);
+        if (Directory.Exists(destDirectoryFullPath) is false)
+        {
+            Directory.CreateDirectory(destDirectoryFullPath);
+        }
+
+        var fileName = Path.GetFileName(srcFilePath);
+        var copyFilePath = Path.Combine(destDirectoryPath, fileName);
+
+        File.Copy(srcFilePath, copyFilePath);
+    }
+
     private FileUploadResult Upload(IFormFile file, string directoryPath)
     {
+        if (Path.HasExtension(directoryPath))
+        {
+            throw new Exception("Directory path should not contain file extension.");
+        }
+
         var combinedDirectoryPath = string.IsNullOrEmpty(_fileStorageOptions.BaseFolderPath)
             ? directoryPath
             : Path.Combine(_fileStorageOptions.BaseFolderPath, directoryPath);
         var uploadDirectoryPath = Path.Combine(Environment.CurrentDirectory, combinedDirectoryPath);
 
-        if (!File.Exists(uploadDirectoryPath)) Directory.CreateDirectory(uploadDirectoryPath);
+        if (Directory.Exists(uploadDirectoryPath) is false)
+        {
+            Directory.CreateDirectory(uploadDirectoryPath);
+        }
 
         var fileNameGenerated = FileStorageHelpers.GenerateFileName(file.FileName);
         var fullPath = Path.Combine(uploadDirectoryPath, fileNameGenerated);

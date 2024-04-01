@@ -41,4 +41,12 @@ public interface IFileStorage
     /// <param name="filePath">The path of the file to be retrieved.</param>
     /// <returns>The file stream of the file.</returns>
     Stream GetFile(string filePath);
+    
+    /// <summary>
+    /// Copies a file from the source file path to the specified destination directory path.
+    /// This method ignores the Base Folder Path.
+    /// </summary>
+    /// <param name="srcFilePath">The path of the source file to be copied.</param>
+    /// <param name="destDirectoryPath">The path of the destination directory where the file will be copied.</param>
+    void CopyFile(string srcFilePath, string destDirectoryPath);
 }
