@@ -89,6 +89,27 @@ public class FileStorage : IFileStorage
         File.Copy(srcFilePath, copyFilePath);
     }
 
+    public void MoveFile(string srcFilePath, string destDirectoryPath)
+    {
+        ArgumentNullException.ThrowIfNull(srcFilePath, nameof(srcFilePath));
+        ArgumentNullException.ThrowIfNull(destDirectoryPath, nameof(destDirectoryPath));
+        
+        if (File.Exists(srcFilePath) is false)
+        {
+            throw new FileNotFoundException();
+        }
+        
+        if (Path.HasExtension(destDirectoryPath))
+        {
+            throw new Exception("Destination directory path should not contain file extension.");
+        }
+        
+        var fileName = Path.GetFileName(srcFilePath);
+        var moveFilePath = Path.Combine(destDirectoryPath, fileName);
+        
+        File.Move(srcFilePath, moveFilePath);
+    }
+
     private FileUploadResult Upload(IFormFile file, string directoryPath)
     {
         if (Path.HasExtension(directoryPath))

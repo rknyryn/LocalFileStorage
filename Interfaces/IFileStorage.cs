@@ -49,4 +49,11 @@ public interface IFileStorage
     /// <param name="srcFilePath">The path of the source file to be copied.</param>
     /// <param name="destDirectoryPath">The path of the destination directory where the file will be copied.</param>
     void CopyFile(string srcFilePath, string destDirectoryPath);
+
+    /// <summary>
+    /// Moves a file from the source file path to the specified destination directory.
+    /// </summary>
+    /// <param name="srcFilePath">The path of the file to be moved.</param>
+    /// <param name="destDirectoryPath">The path of the destination directory where the file will be moved.</param>
+    void MoveFile(string srcFilePath, string destDirectoryPath);
 }
