@@ -6,8 +6,9 @@ namespace LocalFileStorage.Middlewares;
 
 public class FileStorageOptions
 {
-    public string? BaseFolderPath { get; set; }
-    public string[]? GlobalFileExtensionFilter { get; set; }
+    public string? BaseFolderPath { get; set; } = null;
+    public string[]? GlobalFileExtensionFilter { get; set; } = null;
+    public bool GenerateFileName { get; set; } = true;
 }
 
 public static class FileStorageMiddlewareExtension

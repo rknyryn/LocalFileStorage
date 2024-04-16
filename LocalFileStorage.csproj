@@ -7,10 +7,9 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
     <PackageId>rknyryn.LocalFileStorage</PackageId>
-    <Version>3.1.0</Version>
+    <Version>3.2.0</Version>
     <PackageReleaseNotes>
-      - File extension filter bug fixed.
-      - Include global extension filter parameter added.
+      https://github.com/rknyryn/LocalFileStorage/releases
     </PackageReleaseNotes>
     <Authors>Kaan Yarayan</Authors>
     <Description>Local File Storage</Description>
