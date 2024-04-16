@@ -36,6 +36,7 @@ builder.Services.AddFileStorageServices(options =>
 {
     options.BaseFolderPath = Path.Combine("uploaded", "files");
     options.GlobalFileExtensionFilter = [".pdf", ".png"];
+    options.GenerateFileName = false; //default true
 });
 ```
 

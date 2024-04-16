@@ -3,12 +3,13 @@ using LocalFileStorage.Interfaces;
 using LocalFileStorage.Middlewares;
 using LocalFileStorage.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace LocalFileStorage.Concretes;
 
 public class FileStorage : IFileStorage
 {
-    readonly FileStorageOptions _fileStorageOptions;
+    private readonly FileStorageOptions _fileStorageOptions;
 
     public FileStorage(FileStorageOptions fileStorageOptions)
     {
@@ -48,20 +49,51 @@ public class FileStorage : IFileStorage
 
     public void DeleteFile(string filePath)
     {
-        ArgumentNullException.ThrowIfNull(filePath, nameof(filePath));
-        if (File.Exists(filePath) is false) throw new FileNotFoundException();
-
+        CheckFilePathExists(filePath);
         File.Delete(filePath);
     }
 
     public Stream GetFile(string filePath)
     {
-        ArgumentNullException.ThrowIfNull(filePath, nameof(filePath));
-        if (File.Exists(filePath) is false) throw new FileNotFoundException();
-
+        CheckFilePathExists(filePath);
         return new FileStream(filePath, FileMode.Open);
     }
-    
+
+    public void CopyFile(string srcFilePath, string destDirectoryPath)
+    {
+        ArgumentNullException.ThrowIfNull(destDirectoryPath, nameof(destDirectoryPath));
+        CheckFilePathExists(srcFilePath);
+
+        var destDirectoryFullPath = Path.Combine(Environment.CurrentDirectory, destDirectoryPath);
+        if (Directory.Exists(destDirectoryFullPath) is false)
+        {
+            Directory.CreateDirectory(destDirectoryFullPath);
+        }
+
+        var fileName = Path.GetFileName(srcFilePath);
+        var copyFilePath = Path.Combine(destDirectoryPath, fileName);
+
+        File.Copy(srcFilePath, copyFilePath);
+    }
+
+    public void MoveFile(string srcFilePath, string destDirectoryPath)
+    {
+        ArgumentNullException.ThrowIfNull(destDirectoryPath, nameof(destDirectoryPath));
+        CheckFilePathExists(srcFilePath);
+
+        var fileName = Path.GetFileName(srcFilePath);
+        var moveFilePath = Path.Combine(destDirectoryPath, fileName);
+
+        File.Move(srcFilePath, moveFilePath);
+    }
+
+    public bool FileExists(string filePath)
+    {
+        return File.Exists(filePath);
+    }
+
+    #region Private Methods
+
     private FileUploadResult Upload(IFormFile file, string directoryPath)
     {
         var combinedDirectoryPath = string.IsNullOrEmpty(_fileStorageOptions.BaseFolderPath)
@@ -69,9 +101,14 @@ public class FileStorage : IFileStorage
             : Path.Combine(_fileStorageOptions.BaseFolderPath, directoryPath);
         var uploadDirectoryPath = Path.Combine(Environment.CurrentDirectory, combinedDirectoryPath);
 
-        if (!File.Exists(uploadDirectoryPath)) Directory.CreateDirectory(uploadDirectoryPath);
+        if (Directory.Exists(uploadDirectoryPath) is false)
+        {
+            Directory.CreateDirectory(uploadDirectoryPath);
+        }
 
-        var fileNameGenerated = FileStorageHelpers.GenerateFileName(file.FileName);
+        var fileNameGenerated = _fileStorageOptions.GenerateFileName ? 
+            FileStorageHelpers.GenerateFileName(file.FileName)
+            : file.FileName;
         var fullPath = Path.Combine(uploadDirectoryPath, fileNameGenerated);
 
         using (var stream = new FileStream(fullPath, FileMode.Create))
@@ -81,10 +118,34 @@ public class FileStorage : IFileStorage
 
         var filePath = fullPath.Replace(Environment.CurrentDirectory, "").Remove(0, 1);
 
-        return new FileUploadResult(fileName: file.FileName,
+        return new FileUploadResult(
+            fileName: file.FileName,
             filePath: filePath,
             fullPath: fullPath,
-            contentType: file.ContentType,
+            contentType: GetMimeType(file.FileName),
             fileNameGenerated: fileNameGenerated);
     }
+
+    private static string GetMimeType(string fileName)
+    {
+        var provider = new FileExtensionContentTypeProvider();
+        if (!provider.TryGetContentType(fileName, out var contentType))
+        {
+            contentType = "application/octet-stream";
+        }
+        
+        return contentType;            
+    }
+    
+    private static void CheckFilePathExists(string filePath)
+    {
+        ArgumentNullException.ThrowIfNull(filePath, nameof(filePath));
+        
+        if (File.Exists(filePath) is false)
+        {
+            throw new FileNotFoundException();
+        }
+    }
+
+    #endregion
 }

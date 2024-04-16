@@ -27,8 +27,7 @@ public interface IFileStorage
     /// <returns>Returns a <see cref="FileUploadResult"/> indicating the outcome of the file upload operation.</returns>
     FileUploadResult UploadFile(IFormFile file, string directoryPath, string[] extensionFilter,
         bool includeGlobalFileExtensionFilter = true);
-
-
+    
     /// <summary>
     /// This method is used to delete a file from the file storage.
     /// </summary>
@@ -41,4 +40,27 @@ public interface IFileStorage
     /// <param name="filePath">The path of the file to be retrieved.</param>
     /// <returns>The file stream of the file.</returns>
     Stream GetFile(string filePath);
+    
+    /// <summary>
+    /// Copies a file from the source file path to the specified destination directory path.
+    /// This method ignores the Base Folder Path.
+    /// </summary>
+    /// <param name="srcFilePath">The path of the source file to be copied.</param>
+    /// <param name="destDirectoryPath">The path of the destination directory where the file will be copied.</param>
+    void CopyFile(string srcFilePath, string destDirectoryPath);
+
+    /// <summary>
+    /// Moves a file from the source file path to the specified destination directory.
+    /// </summary>
+    /// <param name="srcFilePath">The path of the file to be moved.</param>
+    /// <param name="destDirectoryPath">The path of the destination directory where the file will be moved.</param>
+    void MoveFile(string srcFilePath, string destDirectoryPath);
+
+    /// <summary>
+    /// Checks the existence of a file at the specified file path.
+    /// </summary>
+    /// <param name="filePath">The path to the file to be checked.</param>
+    /// <returns>True if the file exists at the specified path; otherwise, false.</returns>
+    /// <remarks>This method verifies whether a file exists at the provided path. It does not validate the correctness of the path or the accessibility of the file.</remarks>
+    bool FileExists(string filePath);
 }
